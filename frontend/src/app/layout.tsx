@@ -9,7 +9,17 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   title: "AeroShield — Smart City Decision Support",
-  description: "AI-powered heavy vehicle mitigation platform for the Raipur-Bhilai urban corridor",
+  description: "Real-time traffic monitoring, air quality tracking, and incident management for the Raipur-Bhilai corridor (NH-53)",
+  keywords: ["AeroShield", "smart city", "traffic monitoring", "air quality", "Raipur", "Bhilai", "DSS"],
+  authors: [{ name: "AeroShield Team" }],
+  openGraph: {
+    title: "AeroShield — Smart City Decision Support",
+    description: "Real-time traffic monitoring, air quality tracking, and incident management for the Raipur-Bhilai corridor",
+    type: "website",
+  },
+  other: {
+    "theme-color": "#050505",
+  },
 };
 
 export default function RootLayout({
