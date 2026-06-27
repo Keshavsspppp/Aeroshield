@@ -54,48 +54,57 @@ export default function MapComponent({ sensors, pollution }: { sensors: any[], p
       />
       
       {/* Corridor route line */}
-      <Polyline 
-        positions={corridorPath} 
-        pathOptions={{ 
-          color: '#3b82f6', 
-          weight: 3, 
-          opacity: 0.5,
-          dashArray: '8, 6'
-        }} 
+      <Polyline
+        positions={corridorPath}
+        pathOptions={{
+          color: '#3b82f6',
+          weight: 4,
+          opacity: 0.65,
+          dashArray: '10, 6',
+          lineCap: 'round',
+        }}
       />
       
       {/* Sensors */}
       {sensors.map((s) => (
         <Marker key={`sensor-${s.id}`} position={[s.lat, s.lng]} icon={sensorIcon(s.status)}>
           <Popup>
-            <div style={{ fontWeight: 600, marginBottom: 4 }}>{s.name}</div>
-            <div style={{ color: '#a1a1aa', fontSize: '12px' }}>
-              Status: <span style={{ color: s.status === 'active' ? '#10b981' : '#f59e0b' }}>{s.status}</span>
+            <div style={{ fontWeight: 700, marginBottom: 6, fontSize: '13px' }}>{s.name}</div>
+            <div style={{ color: '#a1a1aa', fontSize: '12px', lineHeight: '1.7' }}>
+              <div>Status: <span style={{ color: s.status === 'active' ? '#10b981' : '#f59e0b', fontWeight: 600 }}>{s.status}</span></div>
+              {s.vehicle_count != null && <div>Vehicles: <span style={{ color: '#e4e4e7', fontWeight: 600 }}>{s.vehicle_count}</span></div>}
+              {s.avg_speed != null && <div>Avg Speed: <span style={{ color: '#e4e4e7', fontWeight: 600 }}>{s.avg_speed} km/h</span></div>}
             </div>
           </Popup>
         </Marker>
       ))}
-      
+
       {/* Pollution heatmap zones */}
-      {pollution.map((p) => (
-        <CircleMarker 
-          key={`poll-${p.id}`} 
-          center={[p.lat, p.lng]} 
-          radius={Math.max(20, p.aqi / 5)}
-          pathOptions={{ 
-            color: 'transparent',
-            fillColor: p.aqi > 200 ? '#f43f5e' : p.aqi > 150 ? '#f59e0b' : '#10b981', 
-            fillOpacity: 0.2 
-          }}
-        >
-          <Popup>
-            <div style={{ fontWeight: 600, marginBottom: 4 }}>{p.name}</div>
-            <div style={{ color: '#a1a1aa', fontSize: '12px' }}>
-              AQI: <span style={{ color: p.aqi > 200 ? '#f43f5e' : '#f59e0b', fontWeight: 600 }}>{Math.round(p.aqi)}</span>
-            </div>
-          </Popup>
-        </CircleMarker>
-      ))}
+      {pollution.map((p) => {
+        const aqiColor = p.aqi > 200 ? '#f43f5e' : p.aqi > 150 ? '#f59e0b' : '#10b981';
+        return (
+          <CircleMarker
+            key={`poll-${p.id}`}
+            center={[p.lat, p.lng]}
+            radius={Math.max(20, p.aqi / 5)}
+            pathOptions={{
+              color: aqiColor,
+              weight: 1,
+              fillColor: aqiColor,
+              fillOpacity: 0.15,
+            }}
+          >
+            <Popup>
+              <div style={{ fontWeight: 700, marginBottom: 6, fontSize: '13px' }}>{p.name}</div>
+              <div style={{ color: '#a1a1aa', fontSize: '12px', lineHeight: '1.7' }}>
+                <div>AQI: <span style={{ color: aqiColor, fontWeight: 700 }}>{Math.round(p.aqi)}</span></div>
+                {p.pm25 != null && <div>PM2.5: <span style={{ color: '#e4e4e7', fontWeight: 600 }}>{Math.round(p.pm25)} µg/m³</span></div>}
+                {p.pm10 != null && <div>PM10: <span style={{ color: '#e4e4e7', fontWeight: 600 }}>{Math.round(p.pm10)} µg/m³</span></div>}
+              </div>
+            </Popup>
+          </CircleMarker>
+        );
+      })}
     </MapContainer>
   );
 }
